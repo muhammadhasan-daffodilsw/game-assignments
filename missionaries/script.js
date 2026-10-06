@@ -8,9 +8,28 @@ class Boat{
     }
 
 
-    move_boat(direction)
-    {
+   move_boat() {
+        this.side = this.side === 'left' ? 'right' : 'left';
 
+        if (this.side === 'right') {
+            this.element.style.left = '80%';
+        } else {
+            this.element.style.left = '20px';
+        }
+}
+
+    renderBoat() {
+        const passengers = document.getElementById('boatPassengers');
+
+        passengers.innerHTML = '';
+
+        for (let i = 0; i < this.boat.missionaries; i++) {
+            passengers.innerHTML += '<div class="missionary"></div>';
+        }
+
+        for (let i = 0; i < this.boat.cannibals; i++) {
+            passengers.innerHTML += '<div class="cannibal"></div>';
+        }
     }
 
 }
@@ -25,6 +44,7 @@ class GameController{
         this.missionary_right=0;
         this.boat = new Boat();
         this.eventSetup();
+        this.render()
     }
 
     eventSetup(){
@@ -86,6 +106,7 @@ class GameController{
                 this.cannibal_right--;
             }
         }
+        this.render();
     }
 
     unload_passenger(type) {
@@ -110,45 +131,20 @@ class GameController{
             if (type === 'missionary') this.missionary_right++;
             if (type === 'cannibal') this.cannibal_right++;
         }
+        this.render();
     }
 
 
     check_game_state() {
-        const side = this.boat.side;
+        const leftUnsafe =
+            this.missionary_left > 0 &&
+            this.cannibal_left > this.missionary_left;
 
-        let leftTotalCannibals;
-        let leftTotalMissionaries;
-        let rightTotalCannibals;
-        let rightTotalMissionaries;
+        const rightUnsafe =
+            this.missionary_right > 0 &&
+            this.cannibal_right > this.missionary_right;
 
-        if (side === 'left') {
-            leftTotalCannibals = this.cannibal_left + this.boat.cannibals;
-            leftTotalMissionaries = this.missionary_left + this.boat.missionaries;
-
-            rightTotalCannibals = this.cannibal_right;
-            rightTotalMissionaries = this.missionary_right;
-        } else {
-            leftTotalCannibals = this.cannibal_left;
-            leftTotalMissionaries = this.missionary_left;
-
-            rightTotalCannibals = this.cannibal_right + this.boat.cannibals;
-            rightTotalMissionaries = this.missionary_right + this.boat.missionaries;
-        }
-
-        if (
-            leftTotalCannibals > 0 &&
-            leftTotalMissionaries > 0 &&
-            leftTotalCannibals > leftTotalMissionaries
-        ) {
-            alert('You Lose');
-            return 'End';
-        }
-
-        if (
-            rightTotalCannibals > 0 &&
-            rightTotalMissionaries > 0 &&
-            rightTotalCannibals > rightTotalMissionaries
-        ) {
+        if (leftUnsafe || rightUnsafe) {
             alert('You Lose');
             return 'End';
         }
@@ -156,8 +152,14 @@ class GameController{
         return 'Continue';
     }
 
+
     advance_turn()
     {
+        if (this.cannibal_right+this.missionary_right == 6)
+        {
+            alert ('You Win');
+            return;
+        }
         if (this.boat.cannibals+this.boat.missionaries == 0)
         {
             alert('Boat must have one passenger');
@@ -166,7 +168,35 @@ class GameController{
 
         this.boat.move_boat();
         let state = this.check_game_state();
+        this.render();
+
     }
+
+  render() {
+    let leftBank = document.getElementById('leftBank');
+    let rightBank = document.getElementById('rightBank');
+
+    leftBank.innerHTML = '<h3>Left Bank</h3>';
+    rightBank.innerHTML = '<h3>Right Bank</h3>';
+
+    for (let i = 0; i < this.missionary_left; i++) {
+        leftBank.innerHTML += '<div class="missionary"></div>';
+;
+    }
+
+    for (let i = 0; i < this.cannibal_left; i++) {
+        leftBank.innerHTML += '<div class="cannibal"></div>';
+    }
+
+    for (let i = 0; i < this.missionary_right; i++) {
+        rightBank.innerHTML += '<div class="missionary"></div>';
+    }
+
+    for (let i = 0; i < this.cannibal_right; i++) {
+        rightBank.innerHTML += '<div class="cannibal"></div>';
+    }
+}
+
 
 
 }

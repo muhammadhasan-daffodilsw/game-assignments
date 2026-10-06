@@ -1,22 +1,79 @@
-body{
-    align-items: center;
+
+
+body {
+font-family: Arial, sans-serif;
 }
 
 #gameScreen {
-  display: grid;
-  grid-template-columns: 1fr 2fr 1fr; 
-  width: 400px;
-  height: 400px;
+display: grid;
+grid-template-columns: 1fr 2fr 1fr;
+
+width: 800px;
+height: 400px;
+
+margin: 30px auto;
+
+border: 2px solid black;
+
+
 }
 
-#leftBank {
-  background-color: #8B5A2B; /* Brown earth */
+#leftBank,
+#rightBank {
+background: green;
+
+padding: 10px;
+
+
 }
 
 #river {
-  background-color: #4169E1; /* Royal Blue water */
+    position: relative;
+    background: #3498db;
 }
 
-#rightBank {
-  background-color: #8B5A2B;
+#boat {
+    position: absolute;
+
+    left: 20px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    transition: left 1s;
+}
+
+
+#controls {
+display: flex;
+
+justify-content: center;
+
+gap: 10px;
+
+
+}
+
+button {
+padding: 8px 12px;
+
+cursor: pointer;
+
+
+}
+
+.missionary {
+    width: 20px;
+    height: 20px;
+    background: blue;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.cannibal {
+    width: 20px;
+    height: 20px;
+    background: red;
+    border-radius: 50%;
+    display: inline-block;
 }
