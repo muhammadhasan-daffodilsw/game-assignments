@@ -1,0 +1,22 @@
+body{
+    align-items: center;
+}
+
+#gameScreen {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr; 
+  width: 400px;
+  height: 400px;
+}
+
+#leftBank {
+  background-color: #8B5A2B; /* Brown earth */
+}
+
+#river {
+  background-color: #4169E1; /* Royal Blue water */
+}
+
+#rightBank {
+  background-color: #8B5A2B;
+}

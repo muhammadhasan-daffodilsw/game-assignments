@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title> Missionaries and Cannibals</title>
+<script src="script.js" defer></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div id = "gameScreen">
+    <div id = "leftBank"></div>
+    <div id= "river">
+        <svg id="boat" width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="40" style="fill:red;">
+        <animate
+            attributeName="cx"
+            begin="0s"
+            dur="8s"
+            from="50"
+            to="90%"
+            fill="freeze" />
+    </circle>
+</svg>
+    </div>
+    <div id="rightBank"></div>
+    </div>
+    <div id= "controls">
+        <button id = "addMissionary"> + Missonary</button>
+        <button id = "removeMissionary">- Missonary</button>
+        <button id = "addCannibal">+ Cannibal</button>
+        <button id = "removeCannibal">- Cannibal</button>
+        <button id = "advanceTurn">+ Next Turn</button>
+        
+    </div>
+</body>
+</html>
