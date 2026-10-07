@@ -371,5 +371,12 @@ class GameController {
 }
 }
 
+let cnt,valid = false;
 
-let game = new GameController(Number(prompt('Player Count?')));
+while (!valid)
+{
+    cnt = Number(prompt('Player Count?'));
+    if (cnt<2 || cnt>4) alert('Invalid Player Count');
+    else valid = true;
+}
+let game = new GameController(cnt);
