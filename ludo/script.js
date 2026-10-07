@@ -32,6 +32,14 @@ const colorMap = {
     0 :'B', 1 : 'R', 2 : 'G', 3 : 'Y'
 }
 
+const targetPath = {
+    0: [106, 107, 108, 109, 110, 111], 
+    1: [22, 37, 52, 67, 82, 97],       
+    2: [132, 131, 130, 129, 128, 127], 
+    3: [186, 171, 156, 141, 126, 111]  
+};
+
+
 const home_idx = {
     0: [16, 19, 61, 64],    
     1: [25, 28, 70, 73],      
@@ -100,6 +108,7 @@ class Pawn {
         this.element = element;
 
         this.state = "home";
+        this.pathIdx = -1;
     }
 }
 
@@ -160,10 +169,15 @@ class GameController {
     }
 
     setupEvents() {
-        document
-            .getElementById('roll-die')
-            .addEventListener('click', () => this.rollDie());
-    }
+    document
+        .getElementById('roll-die')
+        .addEventListener('click', () => this.rollDie());
+
+    document
+        .getElementById('advance-turn')
+        .addEventListener('click', () => this.advanceTurn());
+}
+
 
     loadPlayers() {
         for (let i = 0; i < this.player_cnt; i++) {
@@ -177,6 +191,7 @@ class GameController {
 
         this.currentRoll = Math.floor(Math.random() * 6) + 1;
         console.log(this.currentRoll);
+        alert(this.currentRoll);
     }
 
     selectPawn(pawn) {
@@ -195,10 +210,11 @@ class GameController {
 
     advanceTurn()
     {
-        if (!this.currentRoll || !this.selectedPawn)
+        if (this.currentRoll && this.selectedPawn)
         {
-            return;
+            this.moveSelectedPawn();
         }
+
 
         this.selectedPawn.element.style.border = '';
 
@@ -208,29 +224,116 @@ class GameController {
         this.selectedPawn = null;
     }
 
-    moveSelectedPawn()
-    {
+    checkConflict(to) {
+        const destination = gridMap[to].element;
+        const pawnElement = destination.querySelector('.pawn');
 
-        let currPlayer = this.players[this.turn]
-        if (!this.currentRoll || !this.selectedPawn)
-        {
+        if (!pawnElement) {
+            return null;
+        }
+
+        return this.findPawn(pawnElement);
+    }
+
+    findPawn(element) {
+        for (const player of this.players) {
+            for (const pawn of player.pawns) {
+                if (pawn.element === element) {
+                    return pawn;
+                }
+            }
+        }
+
+        return null;}
+
+
+    handleConflict(pawn, conflict) {
+        if (pawn.playerId === conflict.playerId) {
             return;
         }
-        if (this.selectedPawn.state === 'home' && this.currentRoll < 6)
-        {
-            alert('Invalid Move');
+
+        this.sendHome(conflict);
+    }
+
+    sendHome(pawn) {
+        const homePosition = home_idx[pawn.playerId][pawn.id];
+
+        gridMap[homePosition].element.appendChild(pawn.element);
+
+        pawn.position = homePosition;
+        pawn.state = 'home';
+    }
+
+
+
+   moveSelectedPawn() {
+    const pawn = this.selectedPawn;
+
+    if (!this.currentRoll || !pawn) {
+        return;
+    }
+
+    const player = this.players[this.turn];
+
+    let moveTo;
+
+    if (pawn.state === "home") {
+
+        if (this.currentRoll !== 6) {
+            alert("Invalid Move");
             return;
         }
-        let moveTo = -1;
-        if (this.selectedPawn.state === 'home')
-        {
-            moveTo = currPlayer.startingPosition;
+
+        pawn.pathIdx = 0;
+        moveTo = player.startingPosition;
+        pawn.state = "active";
+    }
+
+    else if (pawn.state === "active") {
+
+        const newPathIdx = pawn.pathIdx + this.currentRoll;
+
+        if (newPathIdx < path.length) {
+
+            const startIndex = path.indexOf(player.startingPosition);
+
+            const absoluteIndex =
+                (startIndex + newPathIdx) % path.length;
+
+            moveTo = path[absoluteIndex];
+
+            pawn.pathIdx = newPathIdx;
         }
-        else{
-            moveTo=this.selectedPawn.position;
+
+        else {
+
+            const targetIdx = newPathIdx - path.length;
+
+            if (targetIdx >= targetPath[pawn.playerId].length) {
+                console.log("Cannot move that far");
+                return;
+            }
+
+            moveTo = targetPath[pawn.playerId][targetIdx];
+
+            pawn.pathIdx = newPathIdx;
+            pawn.state = "target";
         }
     }
+
+    const conflict = this.checkConflict(moveTo);
+
+    if (conflict) {
+        this.handleConflict(pawn, conflict);
+    }
+
+    gridMap[moveTo].element.appendChild(pawn.element);
+
+    pawn.position = moveTo;
 }
 
 
-let game = new GameController(3)
+}
+
+
+let game = new GameController(4)
