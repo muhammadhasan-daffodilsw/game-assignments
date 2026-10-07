@@ -28,7 +28,7 @@ const starting_idx = {
     3: 201   
 };
 
-const colorMap = {
+const colourMap = {
     0 :'B', 1 : 'R', 3 : 'G', 2 : 'Y'
 }
 
@@ -73,9 +73,10 @@ function load_grid() {
         if (row > 5 && row < 9 && col > 5 && col < 9) {
             child.classList.add("center");
         }
+        /*
         let k = document.createElement('p')
         k.innerText = i;
-        child.appendChild(k);
+        child.appendChild(k);*/
 
         gridMap[i] = new GridCell(i,child);
 
@@ -83,8 +84,30 @@ function load_grid() {
     }
 }
 
-load_grid();
+function colour_safe() {
+    for (let i in targetPath) {
+        for (let idx of targetPath[i]) {
+            
+            const colourCode = colourMap[i]; 
+            
+            if (gridMap[idx] && gridMap[idx].element) {
+                gridMap[idx].element.classList.add(`safe-${colourCode}`);
+            }
+        }
+    }
 
+    for (let i in starting_idx)
+    {
+
+        const colourCode = colourMap[i]; 
+        gridMap[starting_idx[i]].element.classList.add(`safe-${colourCode}`);
+    }
+}
+
+
+
+load_grid();
+colour_safe();
 function placePawn(id) {
     const indices = home_idx[id];
     let pawn_elements = []
@@ -92,7 +115,7 @@ function placePawn(id) {
         const pawn = document.createElement("div");
 
         pawn.classList.add("pawn");
-        pawn.classList.add(colorMap[id]);
+        pawn.classList.add(colourMap[id]);
 
         gridMap[i].element.appendChild(pawn);
         pawn_elements.push(pawn);
@@ -186,7 +209,7 @@ class GameController {
     const elem = document.getElementById('status');
 
     elem.innerHTML = `
-        <p>Turn: ${colorMap[this.turn]}</p>
+        <p>Turn: ${colourMap[this.turn]}</p>
         <p>Dice: ${this.currentRoll ?? '-'}</p>
     `;
 }
@@ -205,7 +228,6 @@ class GameController {
 
         this.currentRoll = Math.floor(Math.random() * 6) + 1;
         console.log(this.currentRoll);
-        this.currentRoll = Number(prompt('Enter Roll:'));
         this.updateStatus();
     }
 
@@ -231,7 +253,7 @@ class GameController {
         }
         if (this.selectedPawn) this.selectedPawn.element.style.border = '';
 
-        if (this.currentRoll != 6) this.turn = (this.turn + 1) % this.player_cnt;
+        if (this.currentRoll < 6) this.turn = (this.turn + 1) % this.player_cnt;
 
         this.currentRoll = null;
         this.updateStatus();
@@ -288,66 +310,66 @@ class GameController {
     }
 
     const player = this.players[this.turn];
-
+    const startCell = starting_idx[pawn.playerId];
+    const startIndex = path.indexOf(startCell);
+    
     let moveTo;
 
     if (pawn.state === "home") {
-
-        if (this.currentRoll !== 6) {
-            alert("Invalid Move");
+        if (this.currentRoll < 6) {
+            alert("Invalid Move - Need a 6 to leave the yard");
             return;
         }
 
         pawn.pathIdx = 0;
-        moveTo = player.startingPosition;
+        moveTo = startCell;
         pawn.state = "active";
     }
 
-    else if (pawn.state === "active") {
 
-        const newPathIdx = pawn.pathIdx + this.currentRoll;
+    else if (pawn.state === "active" || pawn.state === "target") {
+        
+        const newStepsTraveled = pawn.pathIdx + this.currentRoll;
 
-        if (newPathIdx < path.length) {
-
-            const startIndex = path.indexOf(player.startingPosition);
-
-            const absoluteIndex =
-                (startIndex + newPathIdx) % path.length;
+        if (newStepsTraveled < path.length - 1) {
+            const absoluteIndex = (startIndex + newStepsTraveled) % path.length;
 
             moveTo = path[absoluteIndex];
-
-            pawn.pathIdx = newPathIdx;
-        }
+            pawn.pathIdx = newStepsTraveled;
+            pawn.state = "active";
+        } 
 
         else {
+            const targetIdx = newStepsTraveled - path.length;
+            const maxTargetLength = targetPath[pawn.playerId].length;
 
-            const targetIdx = newPathIdx - path.length;
-
-            if (targetIdx >= targetPath[pawn.playerId].length) {
-                console.log("Cannot move that far");
+            if (targetIdx >= maxTargetLength) {
+                console.log("Cannot move that far - exact roll required");
                 return;
             }
 
             moveTo = targetPath[pawn.playerId][targetIdx];
+            pawn.pathIdx = newStepsTraveled;
 
-            pawn.pathIdx = newPathIdx;
-            pawn.state = "target";
+            if (targetIdx === maxTargetLength - 1) {
+                pawn.state = "finished"; 
+                console.log("Pawn reached home!");
+            } else {
+                pawn.state = "target";
+            }
+        }
+    }
+    if (pawn.state !== "target" && pawn.state !== "finished") {
+        const conflict = this.checkConflict(moveTo);
+        if (conflict) {
+            this.handleConflict(pawn, conflict);
         }
     }
 
-    const conflict = this.checkConflict(moveTo);
-
-    if (conflict) {
-        this.handleConflict(pawn, conflict);
-    }
-
     gridMap[moveTo].element.appendChild(pawn.element);
-
-    pawn.position = moveTo;
+    pawn.position = moveTo;   
+}
 }
 
 
-}
-
-
-let game = new GameController(4)
+let game = new GameController(Number(prompt('Player Count?')));

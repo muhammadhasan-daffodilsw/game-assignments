@@ -1,63 +1,138 @@
+
 body {
     margin: 0;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: #f2f2f2;
-    font-family: Arial, sans-serif;
+    background: #0c232e; /* Soft off-white */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #2c3e50;
 }
 
+
 #gameScreen {
-    padding: 20px;
-    background: white;
-    border: 2px solid #333;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px #0002;
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     text-align: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
+
 
 #grid-container {
     display: grid;
     grid-template-columns: repeat(15, 1fr);
     grid-template-rows: repeat(15, 1fr);
-    width: 450px;
-    height: 450px;
-    gap: 2px;
-    background: #ccc;
+    width: 480px; 
+    height: 480px;
+    gap: 1px; 
+    background: #e2e8f0; 
+    padding: 2px;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .grid-item {
-    border: 1px solid #aaa;
-    box-sizing: border-box;
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.2s ease;
 }
 
-.home-blue { background: lightblue; }
-.home-red { background: #ffcccc; }
-.home-green { background: #a9f1af; }
-.home-yellow { background: #ddee7d; }
-.center { background: #0a7e6a; }
+
+.home-blue, .safe-B { background: #eff6ff; border: 1px solid #bfdbfe; }
+.home-red, .safe-R     { background: #fff5f5; border: 1px solid #feb2b2; }
+.home-green, .safe-G  { background: #f0fdf4; border: 1px solid #bbf7d0; }
+.home-yellow, .safe-Y { background: #fefce8; border: 1px solid #fef08a; }
+.center      { background: #f1f5f9; } 
+
 
 .pawn {
-    width: 20px;
-    height: 20px;
-    margin: auto;
+    width: 22px;
+    height: 22px;
     border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
+    border: 2px solid #ffffff;
+    transition: transform 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.pawn.B { background: blue; }
-.pawn.R { background: red; }
-.pawn.G { background: green; }
-.pawn.Y { background: yellow; }
+.pawn:hover {
+    transform: scale(1.18); 
+}
+
+.pawn.B { background: #3b82f6; }
+.pawn.R { background: #ef4444; }
+.pawn.G { background: #22c55e; } 
+.pawn.Y { background: #eab308; }
 
 #status {
     display: flex;
-    justify-content: center;
-    gap: 25px;
-    margin: 10px;
-    font-weight: bold;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 20px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
 }
 
 #status p {
     margin: 0;
+    color: #64748b;
+}
+
+button, .btn {
+    background: #1e293b; 
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+
+button:hover, .btn:hover {
+    background: #0f172a; 
+    transform: translateY(-1px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+button:active, .btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+
+button:disabled, .btn:disabled {
+    background: #cbd5e1;
+    color: #94a3b8;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+
+#rollBtn, .roll-button {
+    background: #2563eb; /* Vibrant UI Blue */
+    padding: 12px 24px;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+#rollBtn:hover {
+    background: #1d4ed8;
 }
