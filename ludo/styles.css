@@ -1,74 +1,63 @@
 body {
-  text-align: center;
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f2f2f2;
+    font-family: Arial, sans-serif;
 }
 
 #gameScreen {
-  display: inline-block; 
-  margin: 30px auto;
-  border: 2px solid black;
+    padding: 20px;
+    background: white;
+    border: 2px solid #333;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px #0002;
+    text-align: center;
 }
 
 #grid-container {
-  display: grid;
-  grid-template-columns: repeat(15, 1fr);
-  grid-template-rows: repeat(15, 1fr);
-  width: 450px;
-  height: 450px;
-  gap: 2px;
-  background-color: #ccc; 
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    grid-template-rows: repeat(15, 1fr);
+    width: 450px;
+    height: 450px;
+    gap: 2px;
+    background: #ccc;
 }
-
 
 .grid-item {
     border: 1px solid #aaa;
     box-sizing: border-box;
 }
 
-.home-blue {
-    background-color: lightblue;
-}
-
-.home-red {
-    background-color: #FFCCCB;
-}
-
-.home-green {
-    background-color: #a9f1af;
-}
-
-.home-yellow {
-    background-color: #ddee7d;
-}
-
-.center {
-    background-color: #0a7e6a;
-}
+.home-blue { background: lightblue; }
+.home-red { background: #ffcccc; }
+.home-green { background: #a9f1af; }
+.home-yellow { background: #ddee7d; }
+.center { background: #0a7e6a; }
 
 .pawn {
     width: 20px;
     height: 20px;
-    border-radius: 50%;
-
     margin: auto;
-
-    background-color: black;
+    border-radius: 50%;
 }
 
-.pawn.B {
-    background-color: blue;
+.pawn.B { background: blue; }
+.pawn.R { background: red; }
+.pawn.G { background: green; }
+.pawn.Y { background: yellow; }
+
+#status {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin: 10px;
+    font-weight: bold;
 }
 
-.pawn.R {
-    background-color: red;
+#status p {
+    margin: 0;
 }
-
-.pawn.G {
-    background-color: green;
-}
-
-.pawn.Y {
-    background-color: yellow;
-}
-
-
-

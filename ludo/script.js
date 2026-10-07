@@ -29,22 +29,22 @@ const starting_idx = {
 };
 
 const colorMap = {
-    0 :'B', 1 : 'R', 2 : 'G', 3 : 'Y'
+    0 :'B', 1 : 'R', 3 : 'G', 2 : 'Y'
 }
 
 const targetPath = {
     0: [106, 107, 108, 109, 110, 111], 
     1: [22, 37, 52, 67, 82, 97],       
-    2: [132, 131, 130, 129, 128, 127], 
-    3: [186, 171, 156, 141, 126, 111]  
+    2: [118, 117, 116, 115, 114, 113], 
+    3: [202, 187, 172, 157, 142, 127]  
 };
 
 
 const home_idx = {
     0: [16, 19, 61, 64],    
     1: [25, 28, 70, 73],      
-    2: [151, 154, 196, 199],   
-    3: [160, 163, 205, 208]    
+    3: [151, 154, 196, 199],   
+    2: [160, 163, 205, 208]    
 };
 
 function load_grid() {
@@ -73,6 +73,9 @@ function load_grid() {
         if (row > 5 && row < 9 && col > 5 && col < 9) {
             child.classList.add("center");
         }
+        let k = document.createElement('p')
+        k.innerText = i;
+        child.appendChild(k);
 
         gridMap[i] = new GridCell(i,child);
 
@@ -166,6 +169,7 @@ class GameController {
 
         this.loadPlayers();
         this.setupEvents();
+        this.updateStatus();
     }
 
     setupEvents() {
@@ -176,7 +180,17 @@ class GameController {
     document
         .getElementById('advance-turn')
         .addEventListener('click', () => this.advanceTurn());
+}   
+
+    updateStatus() {
+    const elem = document.getElementById('status');
+
+    elem.innerHTML = `
+        <p>Turn: ${colorMap[this.turn]}</p>
+        <p>Dice: ${this.currentRoll ?? '-'}</p>
+    `;
 }
+
 
 
     loadPlayers() {
@@ -191,7 +205,8 @@ class GameController {
 
         this.currentRoll = Math.floor(Math.random() * 6) + 1;
         console.log(this.currentRoll);
-        alert(this.currentRoll);
+        this.currentRoll = Number(prompt('Enter Roll:'));
+        this.updateStatus();
     }
 
     selectPawn(pawn) {
@@ -214,13 +229,12 @@ class GameController {
         {
             this.moveSelectedPawn();
         }
+        if (this.selectedPawn) this.selectedPawn.element.style.border = '';
 
-
-        this.selectedPawn.element.style.border = '';
-
-        this.turn = (this.turn + 1) % this.player_cnt;
+        if (this.currentRoll != 6) this.turn = (this.turn + 1) % this.player_cnt;
 
         this.currentRoll = null;
+        this.updateStatus();
         this.selectedPawn = null;
     }
 
