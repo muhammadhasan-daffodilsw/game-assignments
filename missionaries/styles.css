@@ -20,7 +20,7 @@ border: 2px solid black;
 
 #leftBank,
 #rightBank {
-background: green;
+background: rgb(88, 158, 88);
 
 padding: 10px;
 
@@ -29,10 +29,10 @@ padding: 10px;
 
 #river {
     position: relative;
-    background: #3498db;
+    background: #6cbbf0;
 }
 
-#boat {
+#boat-container {
     position: absolute;
 
     left: 20px;
@@ -41,6 +41,27 @@ padding: 10px;
     transform: translateY(-50%);
 
     transition: left 1s;
+
+    width: 100px;
+    height: 60px;
+}
+
+#boat {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+#passengers {
+    position: absolute;
+
+    left: 20px;
+    top: 5px;
+
+    display: flex;
+    gap: 3px;
+
+    z-index: 2;
 }
 
 
@@ -67,7 +88,6 @@ cursor: pointer;
     height: 20px;
     background: blue;
     border-radius: 50%;
-    display: inline-block;
 }
 
 .cannibal {
@@ -75,5 +95,4 @@ cursor: pointer;
     height: 20px;
     background: red;
     border-radius: 50%;
-    display: inline-block;
 }

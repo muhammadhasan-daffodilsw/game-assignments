@@ -1,0 +1,74 @@
+body {
+  text-align: center;
+}
+
+#gameScreen {
+  display: inline-block; 
+  margin: 30px auto;
+  border: 2px solid black;
+}
+
+#grid-container {
+  display: grid;
+  grid-template-columns: repeat(15, 1fr);
+  grid-template-rows: repeat(15, 1fr);
+  width: 450px;
+  height: 450px;
+  gap: 2px;
+  background-color: #ccc; 
+}
+
+
+.grid-item {
+    border: 1px solid #aaa;
+    box-sizing: border-box;
+}
+
+.home-blue {
+    background-color: lightblue;
+}
+
+.home-red {
+    background-color: #FFCCCB;
+}
+
+.home-green {
+    background-color: #a9f1af;
+}
+
+.home-yellow {
+    background-color: #ddee7d;
+}
+
+.center {
+    background-color: #0a7e6a;
+}
+
+.pawn {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+
+    margin: auto;
+
+    background-color: black;
+}
+
+.pawn.B {
+    background-color: blue;
+}
+
+.pawn.R {
+    background-color: red;
+}
+
+.pawn.G {
+    background-color: green;
+}
+
+.pawn.Y {
+    background-color: yellow;
+}
+
+
+

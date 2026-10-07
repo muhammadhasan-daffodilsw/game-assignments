@@ -4,11 +4,12 @@ class Boat{
         this.side = 'left'
         this.cannibals= 0
         this.missionaries=0
-        this.element = document.getElementById('boat');
+        this.element = document.getElementById('boat-container');
     }
 
 
    move_boat() {
+        this.renderBoat()
         this.side = this.side === 'left' ? 'right' : 'left';
 
         if (this.side === 'right') {
@@ -19,15 +20,15 @@ class Boat{
 }
 
     renderBoat() {
-        const passengers = document.getElementById('boatPassengers');
+        const passengers = document.getElementById('passengers');
 
         passengers.innerHTML = '';
 
-        for (let i = 0; i < this.boat.missionaries; i++) {
+        for (let i = 0; i < this.missionaries; i++) {
             passengers.innerHTML += '<div class="missionary"></div>';
         }
 
-        for (let i = 0; i < this.boat.cannibals; i++) {
+        for (let i = 0; i < this.cannibals; i++) {
             passengers.innerHTML += '<div class="cannibal"></div>';
         }
     }
@@ -44,6 +45,17 @@ class GameController{
         this.missionary_right=0;
         this.boat = new Boat();
         this.eventSetup();
+        this.render()
+    }
+
+    reset()
+    {
+        if (this.boat.side != 'left') this.boat.move_boat();
+        this.cannibal_left = 3;
+        this.missionary_left = 3;
+        this.cannibal_right = 0;
+        this.missionary_right=0;
+        this.boat = new Boat();
         this.render()
     }
 
@@ -84,7 +96,7 @@ class GameController{
             return;
         }
 
-        if ((this.boat.cannibals + this.boat.missionaries) >= 2) {
+        if ((this.boat.cannibals + this.boat.missionaries) == 2) {
             window.alert("No more than two passengers");
             return;
         }
@@ -146,6 +158,7 @@ class GameController{
 
         if (leftUnsafe || rightUnsafe) {
             alert('You Lose');
+            this.reset();
             return 'End';
         }
 
@@ -158,6 +171,7 @@ class GameController{
         if (this.cannibal_right+this.missionary_right == 6)
         {
             alert ('You Win');
+            this.reset();
             return;
         }
         if (this.boat.cannibals+this.boat.missionaries == 0)
@@ -167,7 +181,7 @@ class GameController{
         }
 
         this.boat.move_boat();
-        let state = this.check_game_state();
+        this.check_game_state();
         this.render();
 
     }
@@ -176,25 +190,26 @@ class GameController{
     let leftBank = document.getElementById('leftBank');
     let rightBank = document.getElementById('rightBank');
 
-    leftBank.innerHTML = '<h3>Left Bank</h3>';
-    rightBank.innerHTML = '<h3>Right Bank</h3>';
+    leftBank.innerHTML = '';
+    rightBank.innerHTML = '';
 
     for (let i = 0; i < this.missionary_left; i++) {
-        leftBank.innerHTML += '<div class="missionary"></div>';
+        leftBank.innerHTML += '<div class="missionary"></div><br>';
 ;
     }
 
     for (let i = 0; i < this.cannibal_left; i++) {
-        leftBank.innerHTML += '<div class="cannibal"></div>';
+        leftBank.innerHTML += '<div class="cannibal"></div><br>';
     }
 
     for (let i = 0; i < this.missionary_right; i++) {
-        rightBank.innerHTML += '<div class="missionary"></div>';
+        rightBank.innerHTML += '<div class="missionary"></div><br>';
     }
 
     for (let i = 0; i < this.cannibal_right; i++) {
-        rightBank.innerHTML += '<div class="cannibal"></div>';
+        rightBank.innerHTML += '<div class="cannibal"></div><br>';
     }
+    this.boat.renderBoat();
 }
 
 
